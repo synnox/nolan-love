@@ -1,0 +1,619 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#0f0d0a">
+<title>Pour Lena</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Alex+Brush&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{width:100%}
+body{
+  background:#0f0d0a;
+  color:#ccc4b8;
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:18px;
+  line-height:1.5;
+  min-height:100dvh;
+  overflow-x:hidden;
+}
+body.fixed{overflow:hidden}
+
+/* ===== PARTICULES AMBIANTES ===== */
+#particles{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;
+  overflow:hidden;
+}
+.p{
+  position:absolute;border-radius:50%;
+  background:rgba(180,155,120,0.2);
+  animation:drift var(--d) ease-in-out infinite;
+}
+@keyframes drift{
+  0%,100%{transform:translateY(0) scale(1);opacity:0}
+  15%{opacity:0.5}
+  50%{transform:translateY(-40px) scale(1.8);opacity:0.6}
+  85%{opacity:0.5}
+}
+
+/* ===== LUEUR D'AMBIANCE ===== */
+.glow{
+  position:fixed;top:40%;left:50%;width:70vmax;height:70vmax;
+  transform:translate(-50%,-50%);
+  pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(160,135,100,0.04) 0%,rgba(160,135,100,0.02) 30%,transparent 70%);
+}
+
+.glow-right{
+  position:fixed;top:60%;right:-10%;width:50vmax;height:50vmax;
+  pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(180,155,120,0.025) 0%,transparent 60%);
+}
+
+/* ===== INTRO ===== */
+.intro{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  z-index:999;display:flex;align-items:center;justify-content:center;
+  background:#0f0d0a;cursor:pointer;
+  transition:opacity 1s ease;
+  padding:20px;
+}
+.intro.hidden{opacity:0;pointer-events:none}
+
+.intro-card{
+  width:clamp(260px,72vw,400px);
+  padding:clamp(36px,7vw,60px) clamp(24px,5vw,40px);
+  text-align:center;
+  border:1px solid rgba(180,155,120,0.08);
+  position:relative;
+  transition:opacity 0.5s ease,transform 0.7s ease;
+}
+.intro-card.fade{opacity:0;transform:scale(0.92)}
+
+.intro-card-inner{
+  border:1px solid rgba(180,155,120,0.04);
+  position:absolute;top:6px;left:6px;right:6px;bottom:6px;
+  pointer-events:none;
+}
+
+.intro-sig{
+  font-size:clamp(0.6em,2.2vw,0.7em);
+  color:rgba(180,155,120,0.15);
+  letter-spacing:4px;
+  margin-bottom:16px;
+  font-family:'Playfair Display',Georgia,serif;
+}
+
+.intro-title{
+  font-size:clamp(1.8em,6.5vw,2.6em);
+  color:#d8cec0;
+  font-weight:400;
+  letter-spacing:3px;
+  margin-bottom:8px;
+}
+
+.intro-sep{width:24px;height:1px;background:rgba(180,155,120,0.15);margin:14px auto}
+
+.intro-sub{
+  font-size:clamp(0.8em,3vw,0.9em);
+  color:rgba(180,155,120,0.35);
+  font-weight:300;
+  margin-bottom:0;
+}
+
+.into-lines{
+  margin:20px 0 0;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.intro-dot{width:2px;height:2px;border-radius:50%;background:rgba(180,155,120,0.08)}
+.intro-line{width:18px;height:1px;background:rgba(180,155,120,0.06)}
+
+/* ===== PAGE ===== */
+.page{
+  opacity:0;transition:opacity 1s ease;
+  max-width:440px;margin:0 auto;
+  padding:60px 20px 80px;
+  position:relative;z-index:1;
+}
+.page.show{opacity:1}
+
+.dateline{
+  font-size:clamp(0.55em,2vw,0.65em);
+  color:rgba(180,155,120,0.1);
+  letter-spacing:4px;
+  margin-bottom:48px;
+  text-transform:uppercase;
+}
+
+/* ===== HERO ===== */
+.hero{
+  text-align:center;
+  margin-bottom:24px;
+  padding:24px 0 16px;
+  position:relative;
+}
+
+.hero-glow{
+  position:absolute;top:50%;left:50%;
+  width:220px;height:220px;
+  transform:translate(-50%,-60%);
+  background:radial-gradient(circle,rgba(180,155,120,0.035) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+.name{
+  font-size:clamp(2.8em,12vw,4.8em);
+  color:#ddd4c6;
+  font-weight:300;
+  letter-spacing:6px;
+  display:block;
+  line-height:1;
+}
+
+.hero-line{
+  width:20px;height:1px;
+  background:rgba(180,155,120,0.12);
+  margin:16px auto 0;
+}
+
+/* ===== CÅ’UR ABSTRACT ===== */
+#heartWrap{
+  width:100%;max-width:340px;margin:12px auto 0;
+  aspect-ratio:1/1;position:relative;
+}
+#heartWrap canvas{width:100%;height:100%;display:block}
+
+/* ===== TEXTE ===== */
+.text{
+  margin:28px auto 36px;
+  max-width:360px;
+}
+.text p{
+  font-size:clamp(0.88em,3.2vw,0.95em);
+  color:rgba(180,170,158,0.6);
+  line-height:1.6;
+  margin-bottom:10px;
+}
+.text .sig{
+  margin-top:18px;
+  color:rgba(180,170,158,0.35);
+
+}
+
+/* ===== PROPOSAL ===== */
+.proposal{
+  margin:0;
+  padding:36px 0 0;
+  position:relative;
+}
+
+.proposal-border{
+  width:100%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(180,155,120,0.07),transparent);
+  margin-bottom:28px;
+}
+
+.proposal h2{
+  font-size:clamp(1em,3.8vw,1.15em);
+  font-weight:400;
+  color:#c8c0b2;
+  letter-spacing:1px;
+  margin-bottom:0;
+  line-height:1.4;
+  text-align:center;
+}
+
+.proposal-deco{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin:16px auto 22px;
+}
+.pd-line{width:16px;height:1px;background:rgba(180,155,120,0.08)}
+.pd-dot{width:2px;height:2px;border-radius:50%;background:rgba(180,155,120,0.06)}
+
+.buttons{
+  display:flex;gap:14px;align-items:center;
+  justify-content:center;
+}
+
+.btn-oui{
+  padding:clamp(11px,2.8vw,15px) clamp(32px,7vw,48px);border:none;
+  background:rgba(180,155,120,0.06);
+  color:#ccc4b8;
+  font-size:clamp(0.8em,3vw,0.9em);
+  font-family:'Playfair Display',Georgia,serif;
+  cursor:pointer;letter-spacing:2px;
+  border:1px solid rgba(180,155,120,0.06);
+  transition:background 0.3s,color 0.3s,border-color 0.3s;
+}
+.btn-oui:hover{background:rgba(180,155,120,0.1);border-color:rgba(180,155,120,0.1);color:#d8cec0}
+.btn-oui:active{background:rgba(180,155,120,0.14)}
+
+.btn-non{
+  padding:clamp(7px,2vw,9px) clamp(14px,3vw,20px);border:none;
+  background:transparent;
+  color:rgba(160,155,148,0.1);
+  font-size:clamp(0.6em,2.2vw,0.65em);
+  font-family:'Playfair Display',Georgia,serif;
+  cursor:pointer;letter-spacing:1px;
+  position:relative;
+  transition:color 0.2s;
+}
+.btn-non:hover{color:rgba(160,155,148,0.2)}
+
+/* ===== RÃ‰PONSE ===== */
+.response{
+  display:none;
+  padding:0;
+  text-align:center;
+}
+
+.response-inner{
+  animation:reply 0.8s ease-out forwards;
+}
+@keyframes reply{
+  0%{opacity:0;transform:translateY(6px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+
+.response .r-oui{
+  font-size:clamp(1em,3.8vw,1.2em);
+  color:#c8c0b2;
+  letter-spacing:1px;
+  margin-bottom:4px;
+  font-weight:400;
+}
+.response .r-sub{
+  font-size:clamp(0.8em,3vw,0.9em);
+  color:rgba(180,170,158,0.35);
+  font-style:italic;
+  font-weight:300;
+}
+
+/* ===== Ã‰TINCELLES ===== */
+.spark{
+  position:fixed;z-index:10000;pointer-events:none;
+  animation:rise 2.5s ease-out forwards;
+}
+@keyframes rise{
+  0%{transform:translateY(0) scale(0.6);opacity:0.5}
+  100%{transform:translateY(-100px) scale(1);opacity:0}
+}
+
+/* ===== BOUTON CACHÃ‰ ===== */
+.secret{
+  display:inline-block;margin-top:24px;
+  border:none;background:transparent;
+  color:rgba(180,155,120,0.04);
+  font-size:0.6em;cursor:pointer;
+  font-family:'Playfair Display',Georgia,serif;
+  letter-spacing:2px;padding:4px 8px;
+  transition:color 0.4s;
+}
+.secret:hover{color:rgba(180,155,120,0.08)}
+
+/* ===== TRACES ===== */
+.trace{
+  position:fixed;z-index:9999;pointer-events:none;
+  font-size:10px;color:rgba(180,155,120,0.025);
+  animation:disparition 6s ease-out forwards;
+}
+@keyframes disparition{
+  0%{opacity:1}
+  100%{opacity:0}
+}
+
+@media(max-width:400px){
+  .page{padding:36px 16px 60px}
+}
+</style>
+</head>
+<body>
+
+<div class="glow"></div>
+<div class="glow-right"></div>
+<div id="particles"></div>
+
+<!-- INTRO -->
+<div class="intro" id="intro">
+  <div class="intro-card" id="introCard">
+    <div class="intro-card-inner"></div>
+    <div class="intro-sig">—&nbsp;&nbsp;·&nbsp;&nbsp;—</div>
+    <div class="intro-title">pour Lena</div>
+    <div class="intro-sep"></div>
+    <div class="intro-sub">j'ai fait quelque chose pour toi</div>
+    <div class="into-lines">
+      <span class="intro-line"></span>
+      <span class="intro-dot"></span>
+      <span class="intro-line"></span>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page" id="page">
+  <div class="dateline">—&nbsp;&nbsp;18·03·2026&nbsp;&nbsp;—</div>
+
+  <div class="hero">
+    <div class="hero-glow"></div>
+    <h1 class="name">Lena</h1>
+    <div class="hero-line"></div>
+  </div>
+
+  <div id="heartWrap">
+    <canvas id="particleCanvas"></canvas>
+  </div>
+
+  <div class="text">
+    <p>Je ne savais pas vraiment quoi écrire ici.<br>Alors j'ai préféré faire quelque chose qui reste, quelque chose que tu pourrais revoir un jour et qui te rappellera simplement nous.<br><span style="color:rgba(180,170,158,0.25);font-size:0.85em">Jusqu'à ce que je ne puisse plus payer.</span></p>
+    <p>Depuis le 18 mars, il y a quelque chose qui a changé.<br>Tu as pris une place dans ma vie que je n'avais pas prévue, et aujourd'hui, quand je pense à la suite, c'est naturellement avec toi.</p>
+    <p>Je ne te promets pas que tout sera toujours parfait.<br>Mais je peux te promettre que j'ai envie de continuer à rire avec toi, à construire avec toi, et surtout, à choisir toi.</p>
+    <p class="sig">â€”</p>
+  </div>
+
+  <div class="proposal" id="proposal">
+    <div class="proposal-border"></div>
+
+    <h2>est-ce que tu veux qu'on se marie ?</h2>
+
+    <div class="proposal-deco">
+      <span class="pd-line"></span>
+      <span class="pd-dot"></span>
+      <span class="pd-line"></span>
+    </div>
+
+    <div class="buttons" id="buttons">
+      <button class="btn-oui" id="btnOui">oui</button>
+      <button class="btn-non" id="btnNon">non</button>
+    </div>
+
+    <div class="response" id="response">
+      <div class="response-inner">
+        <p class="r-oui">Tu as dit oui.</p>
+        <p class="r-sub">C'est tout ce que je voulais.</p>
+      </div>
+    </div>
+  </div>
+
+  <button class="secret" id="secretBtn">·</button>
+</div>
+
+<script>
+// ===== PARTICULES =====
+(function(){
+  var c=document.getElementById('particles');
+  var n=Math.min(35,Math.floor(window.innerWidth/12));
+  for(var i=0;i<n;i++){
+    var e=document.createElement('div');
+    e.className='p';
+    e.style.left=Math.random()*100+'%';
+    e.style.top=Math.random()*100+'%';
+    e.style.setProperty('--d',(10+Math.random()*16)+'s');
+    e.style.animationDelay=Math.random()*14+'s';
+    var s=1.2+Math.random()*2.5;
+    e.style.width=s+'px';e.style.height=s+'px';
+    e.style.background='rgba(180,155,120,'+(0.1+Math.random()*0.25)+')';
+    c.appendChild(e);
+  }
+})();
+
+// ===== INTRO =====
+(function(){
+  var intro=document.getElementById('intro');
+  var card=document.getElementById('introCard');
+  var page=document.getElementById('page');
+  var body=document.body;
+
+  function openPage(){
+    card.classList.add('fade');
+    setTimeout(function(){
+      intro.classList.add('hidden');
+      body.classList.remove('fixed');
+      page.classList.add('show');
+    },700);
+  }
+
+  intro.addEventListener('click',function(e){
+    if(e.target===intro)openPage();
+  });
+  card.addEventListener('click',openPage);
+  body.classList.add('fixed');
+})();
+
+// ===== CÅ’UR =====
+(function(){
+  var canvas=document.getElementById('particleCanvas');
+  var ctx=canvas.getContext('2d');
+  var pts=[],W,H,animId;
+
+  function resize(){
+    var r=document.getElementById('heartWrap').getBoundingClientRect();
+    var dpr=Math.min(window.devicePixelRatio||1,1.5);
+    W=r.width;H=r.height;
+    if(W===0||H===0)return;
+    canvas.width=W*dpr;
+    canvas.height=H*dpr;
+    canvas.style.width=W+'px';
+    canvas.style.height=H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    init();
+  }
+
+  function hx(t){return 16*Math.pow(Math.sin(t),3)}
+  function hy(t){return 13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t)}
+
+  function init(){
+    var mots=['Lena','18.03.2026','nous','Lena','nous','Lena','18.03.2026','nous','Lena','18.03.2026'];
+    var total=window.innerWidth<500?35:50;
+    var radius=Math.min(W,H)/2-12;
+    var cx=W/2,cy=H/2+2;
+    pts=[];
+
+    function inside(x,y){
+      return (x*x+y*y-1)*(x*x+y*y-1)*(x*x+y*y-1)-x*x*y*y*y<=0;
+    }
+
+    for(var i=0;i<Math.ceil(total*0.3);i++){
+      var t=Math.random()*2*Math.PI;
+      var s=0.7+Math.random()*0.3;
+      pts.push({
+        tx:hx(t)*s*radius/16+cx,ty:hy(t)*s*radius/16+cy,
+        x:Math.random()*W,y:Math.random()*H,
+        sz:Math.max(7,Math.min(W,H)/30+2),
+        sp:0.002+Math.random()*0.006,
+        ph:Math.random()*Math.PI*2,
+        w:mots[Math.floor(Math.random()*mots.length)]
+      });
+    }
+
+    var done=0;
+    while(done<total-Math.ceil(total*0.3)){
+      var a=Math.random()*2*Math.PI;
+      var rv=Math.random()*1.1;
+      var px=Math.cos(a)*rv,py=Math.sin(a)*rv;
+      if(inside(px,py)||rv<0.3){
+        var s=0.7+Math.random()*0.3;
+        pts.push({
+          tx:px*s*radius+cx,ty:py*s*radius+cy,
+          x:Math.random()*W,y:Math.random()*H,
+          sz:Math.max(6,Math.min(W,H)/32+1),
+          sp:0.002+Math.random()*0.006,
+          ph:Math.random()*Math.PI*2,
+          w:mots[Math.floor(Math.random()*mots.length)]
+        });
+        done++;
+      }
+    }
+  }
+
+  var frame=0;
+  function draw(){
+    frame++;
+    ctx.clearRect(0,0,W,H);
+    for(var p=0;p<pts.length;p++){
+      var pt=pts[p];
+      pt.x+=(pt.tx-pt.x)*pt.sp;
+      pt.y+=(pt.ty-pt.y)*pt.sp;
+      var a=0.2+0.35*Math.sin(frame*0.005+pt.ph);
+      ctx.font=Math.round(pt.sz)+'px Playfair Display,Georgia,serif';
+      ctx.textAlign='center';
+      ctx.textBaseline='middle';
+      ctx.fillStyle='rgba(180,155,120,'+a.toFixed(2)+')';
+      ctx.fillText(pt.w,pt.x,pt.y);
+    }
+    animId=requestAnimationFrame(draw);
+  }
+
+  var resizeTimer;
+  window.addEventListener('resize',function(){
+    cancelAnimationFrame(animId);
+    clearTimeout(resizeTimer);
+    resizeTimer=setTimeout(function(){resize();draw();},250);
+  });
+  resize();
+  draw();
+})();
+
+// ===== PROPOSAL =====
+(function(){
+  var btnOui=document.getElementById('btnOui');
+  var btnNon=document.getElementById('btnNon');
+  var response=document.getElementById('response');
+  var clicks=0;
+
+  function etincelles(){
+    for(var i=0;i<10;i++){
+      setTimeout(function(){
+        var e=document.createElement('div');
+        e.className='spark';
+        e.textContent='·';
+        e.style.left=(15+Math.random()*70)+'%';
+        e.style.bottom='30%';
+        e.style.fontSize=(6+Math.random()*12)+'px';
+        e.style.color='rgba(180,155,120,0.12)';
+        document.body.appendChild(e);
+        setTimeout(function(){e.remove()},3000);
+      },i*80);
+    }
+  }
+
+  btnOui.addEventListener('click',function(){
+    btnOui.style.opacity='0';
+    btnOui.style.transition='opacity 0.5s';
+    btnNon.style.opacity='0';
+    btnNon.style.transition='opacity 0.5s';
+    var h2=document.querySelector('.proposal h2');
+    h2.style.opacity='0';
+    h2.style.transition='opacity 0.5s';
+
+    setTimeout(function(){
+      btnOui.style.display='none';
+      btnNon.style.display='none';
+      h2.style.display='none';
+      response.style.display='block';
+      etincelles();
+    },500);
+  });
+
+  btnNon.addEventListener('mouseenter',function(){
+    if(clicks<6){
+      var dx=(Math.random()-0.5)*60;
+      var dy=(Math.random()-0.5)*20;
+      btnNon.style.transform='translate('+dx+'px,'+dy+'px)';
+      btnNon.style.transition='transform 0.2s ease';
+      clicks++;
+      var msgs=['non','pas Ã§a','non','l\'autre','non','...'];
+      btnNon.textContent=msgs[clicks-1];
+    }
+  });
+
+  btnNon.addEventListener('click',function(){
+    if(clicks<6){
+      var dx=(Math.random()-0.5)*60;
+      var dy=(Math.random()-0.5)*20;
+      btnNon.style.transform='translate('+dx+'px,'+dy+'px)';
+      btnNon.style.transition='transform 0.2s ease';
+      clicks++;
+      var msgs=['non','pas Ã§a','non','l\'autre','non','...'];
+      btnNon.textContent=msgs[clicks-1];
+    }
+  });
+})();
+
+// ===== SECRET =====
+(function(){
+  var btn=document.getElementById('secretBtn');
+  var once=false;
+
+  btn.addEventListener('click',function(){
+    if(once)return;
+    once=true;
+    btn.textContent='Lena';
+    btn.style.color='rgba(180,155,120,0.08)';
+
+    var mots=['Lena','toi','nous','Lena','18.03.2026','Lena'];
+    var c=0;
+
+    function add(){
+      if(c>=16)return;
+      var e=document.createElement('div');
+      e.className='trace';
+      e.textContent=mots[Math.floor(Math.random()*mots.length)];
+      e.style.left=Math.random()*100+'%';
+      e.style.top=Math.random()*100+'%';
+      e.style.fontSize=(7+Math.random()*10)+'px';
+      e.style.transform='rotate('+(Math.random()-0.5)*12+'deg)';
+      document.body.appendChild(e);
+      c++;
+      setTimeout(function(){e.remove()},6500);
+      setTimeout(add,400+Math.random()*600);
+    }
+
+    add();
+  });
+})();
+</script>
+</body>
+</html>
+
